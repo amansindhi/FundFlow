@@ -1,13 +1,12 @@
-# 💰 FundFlow — Student Money Tracker
+# 💸 FundFlow — Student Expense Tracker
 
 <div align="center">
 
 ![FundFlow](icon-192.png)
 
-**A simple and modern personal finance tracker designed for students.**
+**A colorful, student-friendly expense tracker with budgets, recurring transactions & savings goals — built as a Progressive Web App.**
 
-[![PWA](https://img.shields.io/badge/PWA-Ready-5A0FC8?style=for-the-badge&logo=pwa)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
-[![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?style=for-the-badge&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![PWA](https://img.shields.io/badge/PWA-Ready-5A0FC8?style=for-the-badge&logo=pwa)](#)
 [![License](https://img.shields.io/badge/License-Personal%20Use-blue?style=for-the-badge)](LICENSE)
 
 </div>
@@ -18,173 +17,222 @@
 
 | Feature | Description |
 |---|---|
-| 💰 **Transaction Tracking** | Add and manage income and expenses with categories, descriptions and dates |
-| 🔄 **Recurring Transactions** | Create weekly or monthly recurring income and expenses |
-| 📊 **Financial Analytics** | View income, expenses, balance and monthly financial activity |
-| 📈 **Expense Analysis** | Analyze spending and income through category-based information |
-| 🎯 **Budget Tracker** | Set monthly or custom date-range budgets and monitor spending |
-| 💵 **Savings Goals** | Create savings targets and track progress toward each goal |
-| 🔍 **Transaction Search** | Search and filter transactions easily |
-| ✏️ **Edit & Delete** | Update or remove existing transactions |
-| 📁 **CSV Export** | Export transaction data for personal records and analysis |
-| 🌙 **Dark / Light Mode** | Switch between light and dark themes |
-| 📱 **Responsive Design** | Optimized for mobile and desktop screens |
-| 📲 **PWA Installable** | Install FundFlow as an application on supported devices |
-| ⚡ **Offline Support** | Service worker support for improved offline access |
-| 🔒 **Local Data Storage** | Financial data is stored locally in the browser |
+| 💰 **Transaction Tracking** | Add income & expense with categories, description & date |
+| 🔁 **Recurring Transactions** | Auto-add monthly/weekly entries like rent, allowance, or subscriptions |
+| 🐷 **Savings Goals** | Set a target (e.g. "New Laptop"), track progress with a ring chart, top up anytime |
+| 📊 **12-Month Analytics** | Rolling year bar chart + category-wise spending breakdown |
+| 🎯 **Budget Tracker** | Set monthly or custom date range budgets per category |
+| 🗑️ **Clear Records** | Delete transactions by month, range, or all at once |
+| ✏️ **Edit Transactions** | Fix a mistyped amount or category without deleting and re-adding |
+| 📤 **CSV Export** | Download all transactions as a spreadsheet-ready CSV |
+| 🌙 **Dark / Light Mode** | Smooth theme toggle — preference saved automatically |
+| 📱 **Fully Responsive** | Optimized for both mobile and desktop |
+| 📲 **PWA Installable** | Install as a native app on Android & iOS |
+| 🔒 **100% Private** | All data stored locally — no server, no account needed |
+| ⚡ **Offline Support** | Works without internet after first load |
 
 ---
 
-## 💰 Transaction Management
+## 📸 Screenshots
 
-FundFlow provides a simple interface for managing daily financial activity.
+> Add a `screenshots/` folder to the repo with these images, then these paths will render automatically on GitHub.
 
-Users can:
+| Home | Analytics |
+|---|---|
+| ![Home](screenshots/home.png) | ![Analytics](screenshots/analytics.png) |
 
-1. **Add Income** — Record money received from different sources.
-2. **Add Expenses** — Record daily spending and categorize transactions.
-3. **Choose Categories** — Organize transactions using categories.
-4. **Set Dates** — Record the date associated with each transaction.
-5. **Edit Transactions** — Update existing transaction information.
-6. **Delete Transactions** — Remove unwanted records.
-7. **Search Transactions** — Quickly find transactions using the search functionality.
+| Budget | Goals |
+|---|---|
+| ![Budget](screenshots/budget.png) | ![Goals](screenshots/goals.png) |
 
 ---
 
-## 🔄 Recurring Transactions
+## 🛠️ Tech Stack
 
-FundFlow supports recurring transactions for regular financial activities.
-
-Users can create:
-
-*   **Weekly transactions**
-*   **Monthly transactions**
-
-This can be used for recurring:
-
-*   Allowance
-*   Bills
-*   Subscriptions
-*   Regular expenses
-*   Regular income
-
-Recurring transactions help reduce the need to manually enter the same transaction repeatedly.
+- **HTML5** — Semantic structure
+- **Vanilla CSS3** — CSS variables, grid, animations, responsive design
+- **Vanilla JavaScript** — No frameworks, pure JS logic
+- **Lucide Icons** — Beautiful open-source icon library
+- **localStorage** — Client-side data persistence
+- **Service Worker** — Offline caching & PWA support
 
 ---
 
-## 📊 Financial Analytics
+## 🚀 Getting Started
 
-FundFlow includes an analytics section for understanding financial activity.
+### Option 1 — Open directly
+```bash
+# Just open in browser
+open index.html
+```
 
-The dashboard provides information such as:
+### Option 2 — Local server (for PWA features)
+```bash
+# Using Python
+python -m http.server 8000
 
-*   Total Income
-*   Total Expenses
-*   Current Balance
-*   Monthly financial activity
-*   Income analysis
-*   Expense analysis
-*   Category-based spending information
-*   Historical monthly information
+# Using Node.js
+npx serve .
 
-Users can select different months to view their financial activity.
-
----
-
-## 🎯 Budget Tracker
-
-The Budget Tracker helps users control spending by setting financial limits.
-
-Users can:
-
-1. Create a budget.
-2. Select a spending category.
-3. Choose a budget period.
-4. Set a budget limit.
-5. Monitor spending against the selected limit.
-6. Delete existing budgets.
-
-FundFlow supports different budget periods, including:
-
-*   **Monthly**
-*   **Custom date range**
+# Using VS Code
+# Install "Live Server" extension → Right click index.html → Open with Live Server
+```
+Then open: `http://localhost:8000`
 
 ---
 
-## 💵 Savings Goals
+## 📂 File Structure
 
-FundFlow provides a savings goal system for tracking financial targets.
-
-Users can:
-
-*   Create a savings goal
-*   Set a target amount
-*   Record the current saved amount
-*   Add money toward a goal
-*   Track savings progress
-*   Delete savings goals
-
-Example goals include:
-
-*   Laptop
-*   Smartphone
-*   Trip
-*   Gadgets
-*   Emergency savings
+```
+fundflow/
+├── index.html       # App shell — layout & styles
+├── app.js           # App logic — transactions, budgets, goals, analytics
+├── manifest.json     # PWA manifest — icons, theme, display mode
+├── sw.js             # Service Worker — offline caching
+├── icon-192.png       # App icon (192×192)
+├── icon-512.png       # App icon (512×512)
+└── README.md          # This file
+```
 
 ---
 
-## 📁 CSV Export
+## 📲 Install as App (PWA)
 
-FundFlow provides CSV export functionality for transaction records.
+> Requires the app to be served over `http://` or `https://` (see **Option 2** above) — installing directly from a `file://` path opened by double-click won't show the install prompt.
 
-Exported data can be used for:
+### Android (Chrome)
+1. Open the app URL in **Chrome**
+2. Tap **⋮ Menu** → **"Add to Home Screen"**
+3. Tap **"Install"** → App installed! ✅
 
-*   Personal financial records
-*   Spreadsheet analysis
-*   Backup purposes
-*   Further data processing
-
----
-
-## 🌙 Dark / Light Mode
-
-FundFlow supports both light and dark themes.
-
-Users can switch between themes directly from the application interface for a more comfortable experience in different environments.
+### iPhone / iPad (Safari)
+1. Open the app URL in **Safari**
+2. Tap **Share ⬆** button
+3. Tap **"Add to Home Screen"**
+4. Tap **"Add"** → App installed! ✅
 
 ---
 
-## 📱 Progressive Web App
+## 💡 Usage Guide
 
-FundFlow includes Progressive Web App functionality.
+### Adding a Transaction
+1. Select **Expense** or **Income** tab
+2. Enter **Amount** (required)
+3. Enter **Description** *(optional — auto-fills from category)*
+4. Choose **Category**
+5. Select **Date**
+6. If category is "Other" → enter custom name
+7. Optionally tick **"Make this a recurring transaction"** and choose weekly/monthly
+8. Tap **"Add Transaction"**
 
-The project contains:
+### Setting a Budget
+1. Go to the **Budget** tab → tap **"Set a Budget"**
+2. Select **Category**
+3. Choose **Period**:
+   - 📅 **Monthly** — tracks current month spending
+   - 📆 **Custom** — set your own start & end date
+4. Enter **Budget Limit**
+5. Tap **Save** — budget tracker shows real-time progress
 
-*   `manifest.json`
-*   `sw.js`
-*   192×192 application icon
-*   512×512 application icon
-*   Service Worker caching
+### Creating a Savings Goal
+1. Go to the **Goals** tab → tap **"New Savings Goal"**
+2. Enter a **Goal Name**, **Target Amount**, and any amount **already saved**
+3. Tap **Save** — a progress ring shows how close you are
+4. Tap **"Add Funds"** anytime to top it up
 
-The PWA structure allows FundFlow to behave more like an installable application on supported browsers and devices.
+### Clearing Records
+1. Tap 🗑️ **trash icon** in header
+2. Choose what to clear:
+   - This Month
+   - Last 3 / 6 Months
+   - This Year
+   - Custom Date Range
+   - ALL Records
+3. Preview shows how many transactions will be deleted
+4. Confirm → Done ✅
+
+### Analytics
+- Go to the **Stats** tab
+- Scroll the **12-month bar chart** and tap any bar to drill into that month
+- Tap a **month pill** to see that month's income, expenses & net
+- See spending breakdown by category below the chart
 
 ---
 
-## 🔒 Data Storage & Privacy
+## 🔒 Data & Privacy
 
-FundFlow stores application data locally in the user's browser using **LocalStorage**.
+```
+Your Data Flow:
+Phone/PC Browser → localStorage → Stays on YOUR device
 
-### Data Flow
+❌ No server
+❌ No database  
+❌ No account required
+❌ No data sent anywhere
+✅ 100% private
+✅ Works offline
+```
 
-```text
-User
-  │
-  ▼
-FundFlow
-  │
-  ▼
-Browser LocalStorage
-  │
-  ▼
-Stored Locally on Device
+> ⚠️ **Note:** Clearing browser cache or site data will erase your transactions.
+> Use the **Export CSV** button in the header to keep a backup.
+
+---
+
+## 🔄 Deployment (optional — e.g. Netlify)
+
+### One-time GitHub Setup
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/amansindhi/FundFlow.git
+git push -u origin main
+```
+
+### Connect to Netlify
+1. Go to [app.netlify.com](https://app.netlify.com)
+2. **"Add new site"** → **"Import from GitHub"**
+3. Select **FundFlow** repo
+4. Deploy! ✅
+
+### Auto-Deploy
+Every `git push` → Netlify automatically deploys! 🚀
+
+```bash
+# Update workflow
+git add .
+git commit -m "v1.1 - Added savings goals"
+git push
+# → Live in ~30 seconds!
+```
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Import data (backup restore)
+- [ ] Multiple currencies
+- [ ] Custom categories
+- [ ] Widgets / home screen summary
+- [ ] Shared/group expenses
+
+---
+
+## 👨‍💻 Developers
+
+**Built by** — *Aman Sindhi*
+
+[![GitHub](https://img.shields.io/badge/GitHub-amansindhi-181717?style=flat&logo=github)](https://github.com/amansindhi)
+
+---
+
+## 📄 License
+
+This project is for **personal use and portfolio** purposes.
+Feel free to fork and modify for your own use.
+
+---
+
+<div align="center">
+Made with ❤️ | No subscriptions. No ads. Just your money.
+</div>
