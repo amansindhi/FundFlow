@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="application-name" content="FundFlow">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FundFlow">
+  <meta name="theme-color" content="#FFF8F0" id="tcmeta">
+  <meta name="description" content="FundFlow — a friendly money tracker for students">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FundFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --coral: #FF6B5B;
+      --coral-dk: #E5503F;
+      --teal: #00C896;
+      --teal-dk: #00A77D;
+      --yellow: #FFC94D;
+      --yellow-dk: #F0AE1C;
+      --plum: #2D2A4A;
+      --plum-soft: #56517A;
+      --cream: #FFF8F0;
+      --card: #FFFFFF;
+      --line: #F0E4D8;
+      --shadow-sm: 0 2px 10px rgba(45, 42, 74, .06);
+      --shadow-md: 0 8px 28px rgba(45, 42, 74, .10);
+      --shadow-coral: 0 8px 22px rgba(255, 107, 91, .32);
+      --shadow-teal: 0 8px 22px rgba(0, 200, 150, .30);
+      --tr: background .3s, color .3s, border-color .3s, box-shadow .3s;
+    }
+
+    [data-theme="dark"] {
+      --cream: #241E33;
+      --card: #2E2645;
+      --line: #3D3455;
+      --plum: #FBF6FF;
+      --plum-soft: #B6ACD6;
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, .25);
+      --shadow-md: 0 8px 28px rgba(0, 0, 0, .35);
+    }
+
+    * , *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--plum);
+      min-height: 100vh;
+      transition: var(--tr);
+    }
+
+    h1, h2, h3, .display {
+      font-family: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+    }
+
+    .app {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 16px 16px 108px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 0 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--coral), var(--yellow));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-coral);
+      flex-shrink: 0;
+    }
+
+    .brand-mark svg { width: 20px; height: 20px; color: #fff; }
+
+    .brand-name {
+      font-family: 'Baloo 2', sans-serif;
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -.3px;
+      color: var(--plum);
+    }
+
+    .header-right { display: flex; align-items: center; gap: 8px; }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: none;
+      background: var(--card);
+      box-shadow: var(--shadow-sm);
+      color: var(--plum-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .icon-btn:hover { color: var(--coral); transform: translateY(-1px); }
+    .icon-btn svg { width: 18px; height: 18px; }
+
+    /* ── BALANCE (receipt-style) CARD ── */
+    .balance-card {
+      background: linear-gradient(150deg, var(--plum) 0%, #443D6B 100%);
+      border-radius: 26px;
+      padding: 24px 22px 20px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+
+    .balance-card::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -40px;
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(255,107,91,.35) 0%, transparent 70%);
+    }
+    .balance-card::after {
+      content: '';
+      position: absolute;
+      bottom: -50px; left: -30px;
+      width: 160px; height: 160px;
+      background: radial-gradient(circle, rgba(0,200,150,.28) 0%, transparent 70%);
+    }
+
+    .blabel {
+      font-size: 12px;
+      color: rgba(255,255,255,.65);
+      font-weight: 700;
+      margin-bottom: 4px;
+      position: relative;
+    }
+
+    .bamt {
+      font-family: 'Baloo 2', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      margin-bottom: 4px;
+      position: relative;
+      line-height: 1;
+    }
+
+    .bamt .cur { font-size: 24px; color: var(--yellow); vertical-align: super; }
+
+    .bsub { font-size: 12px; color: rgba(255,255,255,.55); margin-bottom: 16px; position: relative; }
+
+    .brow { display: flex; gap: 9px; position: relative; }
+
+    .bstat {
+      flex: 1;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 11px 10px;
+    }
+    .bstat.inc { background: rgba(0,200,150,.22); border-color: rgba(79,227,193,.35); }
+    .bstat.exp { background: rgba(255,107,91,.22); border-color: rgba(255,154,138,.35); }
+    .bstat.recur { background: rgba(255,201,77,.22); border-color: rgba(255,201,77,.4); }
+
+    .bstat-top { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
+    .bstat-icon { width: 20px; height: 20px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .bstat-icon svg { width: 12px; height: 12px; }
+    .bstat-label { font-size: 10px; color: rgba(255,255,255,.85); font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+    .bstat-val { font-size: 17px; font-weight: 800; color: #fff; }
+
+    /* ── SECTION TITLE ── */
+    .stitle {
+      font-family: 'Baloo 2', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--plum);
+      margin: 20px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .stitle svg { width: 15px; height: 15px; color: var(--coral); }
+
+    /* ── ADD FORM ── */
+    .add-form {
+      background: var(--card);
+      border-radius: 22px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      box-shadow: var(--shadow-sm);
+      border: 2px solid var(--line);
+      transition: var(--tr);
+    }
+
+    .type-toggle { display: flex; gap: 8px; }
+    .type-btn {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 2px solid var(--line);
+      background: var(--cream);
+      color: var(--plum-soft);
+      font-size: 14px; font-weight: 700;
+      cursor: pointer;
+      transition: .2s;
+    }
+    .type-btn svg { width: 16px; height: 16px; }
+    .type-btn.ae { background: rgba(255,107,91,.12); border-color: var(--coral); color: var(--coral-dk); }
+    .type-btn.ai { background: rgba(0,200,150,.12); border-color: var(--teal); color: var(--teal-dk); }
+
+    .form-row { display: flex; gap: 9px; }
+    .iw { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .iw label { font-size: 11px; color: var(--plum-soft); font-weight: 700; display: flex; align-items: center; gap: 4px; }
+    .iw label svg { width: 10px; height: 10px; }
+
+    .inp-wrap { position: relative; display: flex; align-items: center; }
+    .inp-wrap .inp-icon { position: absolute; left: 11px; width: 16px; height: 16px; color: var(--plum-soft); pointer-events: none; }
+    .inp-wrap .inp-icon svg { width: 16px; height: 16px; }
+
+    .inp {
+      background: var(--cream);
+      border: 2px solid var(--line);
+      border-radius: 13px;
+      padding: 11px 12px 11px 36px;
+      color: var(--plum);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      outline: none;
+      transition: .2s;
+      width: 100%;
+    }
+    .inp:focus { border-color: var(--coral); box-shadow: 0 0 0 3px rgba(255,107,91,.15); }
+    .inp::placeholder { color: var(--plum-soft); font-weight: 500; }
+    select.inp option { background: var(--card); color: var(--plum); }
+
+    .other-wrap { display: none; }
+    .other-wrap.show { display: flex; }
+
+    .add-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: linear-gradient(135deg, var(--coral), #FF8A6E);
+      border: none;
+      border-radius: 15px;
+      padding: 14px;
+      color: #fff;
+      font-family: 'Baloo 2', sans-serif;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow-coral);
+      transition: .15s;
+    }
+    .add-btn:hover { transform: translateY(-1px); }
+    .add-btn svg { width: 18px; height: 18px; }
+
+    /* recurring checkbox row */
+    .chk-row {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 700; color: var(--plum-soft);
+      cursor: pointer; user-select: none;
+    }
+    .chk-box {
+      width: 20px; height: 20px; border-radius: 7px; border: 2px solid var(--line);
+      background: var(--cream); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: .15s;
+    }
+    .chk-box svg { width: 12px; height: 12px; color: #fff; opacity: 0; transition: .15s; }
+    .chk-row.checked .chk-box { background: var(--teal); border-color: var(--teal); }
+    .chk-row.checked .chk-box svg { opacity: 1; }
+    .recur-freq-wrap { display: none; }
+    .recur-freq-wrap.show { display: flex; }
+
+    /* ── TRANSACTIONS ── */
+    .txn-search-wrap { margin-bottom: 10px; }
+    .txn-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .txn-item {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 13px 14px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: var(--shadow-sm);
+      border: 2px solid transparent;
+      animation: si .3s ease;
+      transition: .2s;
+    }
+    .txn-item:hover { border-color: var(--line); }
+
+    @keyframes si { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    .txn-icon { width: 42px; height: 42px; border-radius: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .txn-icon svg { width: 19px; height: 19px; }
+
+    .txn-info { flex: 1; min-width: 0; }
+    .txn-name { font-size: 14px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .txn-meta { font-size: 11px; color: var(--plum-soft); margin-top: 2px; display: flex; align-items: center; gap: 4px; font-weight: 600; }
+    .txn-meta svg { width: 10px; height: 10px; }
+    .recur-badge { background: rgba(0,200,150,.15); color: var(--teal-dk); border-radius: 6px; padding: 1px 6px; font-size: 10px; font-weight: 800; }
+
+    .txn-amt { font-size: 15px; font-weight: 800; flex-shrink: 0; }
+    .neg { color: var(--coral-dk); }
+    .pos { color: var(--teal-dk); }
+
+    .txn-del, .txn-edit {
+      background: none; border: none; color: var(--plum-soft);
+      cursor: pointer; padding: 7px; border-radius: 9px;
+      transition: .2s; opacity: 0; display: flex; align-items: center;
+    }
+    .txn-item:hover .txn-del, .txn-item:hover .txn-edit,
+    .bgt-item:hover .txn-del, .goal-item:hover .txn-del { opacity: 1; }
+    .txn-del:hover { color: var(--coral); background: rgba(255,107,91,.12); }
+    .txn-edit:hover { color: var(--yellow-dk); background: rgba(255,201,77,.18); }
+    .txn-del svg, .txn-edit svg { width: 15px; height: 15px; }
+
+    .empty { text-align: center; padding: 34px 14px; color: var(--plum-soft); }
+    .ei { width: 52px; height: 52px; margin: 0 auto 10px; border-radius: 16px; background: var(--line); display: flex; align-items: center; justify-content: center; }
+    .ei svg { width: 24px; height: 24px; color: var(--plum-soft); }
+    .empty p { font-size: 13px; font-weight: 700; line-height: 1.6; }
+
+    /* ── VIEWS / NAV ── */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 480px;
+      background: var(--card);
+      border-top: 2px solid var(--line);
+      display: flex;
+      padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+      z-index: 100;
+      box-shadow: 0 -4px 20px rgba(45,42,74,.06);
+    }
+    .nav-btn {
+      flex: 1;
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      background: none; border: none;
+      padding: 7px 4px;
+      color: var(--plum-soft);
+      font-size: 11px; font-weight: 700;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: .2s;
+    }
+    .nav-btn svg { width: 19px; height: 19px; }
+    .nav-btn.active { color: var(--coral); background: rgba(255,107,91,.1); }
+
+    /* ── ANALYTICS ── */
+    .chart-wrap {
+      background: var(--card);
+      border-radius: 22px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+      border: 2px solid var(--line);
+    }
+    .chart-title {
+      font-family: 'Baloo 2', sans-serif;
+      font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--plum);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .chart-title svg { width: 14px; height: 14px; color: var(--coral); }
+
+    .month-pills { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 12px; scrollbar-width: none; }
+    .month-pills::-webkit-scrollbar { display: none; }
+    .mpill {
+      flex-shrink: 0; padding: 9px 16px; border-radius: 20px;
+      font-size: 12px; font-weight: 700;
+      border: 2px solid var(--line);
+      background: var(--cream); color: var(--plum-soft);
+      cursor: pointer; transition: .2s; white-space: nowrap;
+    }
+    .mpill.active { background: var(--coral); border-color: var(--coral); color: #fff; }
+
+    .mdetail { background: var(--cream); border-radius: 16px; padding: 14px; margin-bottom: 12px; border: 2px dashed var(--line); }
+    .mdetail-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .mdetail-name { font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 15px; }
+    .mclose-btn { background: none; border: none; color: var(--plum-soft); cursor: pointer; }
+    .mclose-btn svg { width: 17px; height: 17px; }
+    .mds-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .mds { flex: 1; background: var(--card); border-radius: 12px; padding: 9px; text-align: center; }
+    .mds-label { font-size: 10px; color: var(--plum-soft); font-weight: 700; margin-bottom: 2px; }
+    .mds-val { font-size: 14px; font-weight: 800; }
+
+    .bar-chart-scroll { overflow-x: auto; scrollbar-width: none; }
+    .bar-chart-scroll::-webkit-scrollbar { display: none; }
+    .bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 130px; padding-top: 10px; min-width: min-content; }
+    .bar-col { flex: 0 0 auto; width: 34px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
+    .bar-track { width: 100%; max-width: 34px; height: 100px; background: var(--line); border-radius: 9px; display: flex; align-items: flex-end; overflow: hidden; position: relative; }
+    .bar-fill { width: 100%; background: linear-gradient(180deg, var(--coral), var(--coral-dk)); border-radius: 9px 9px 0 0; transition: height .4s ease; min-height: 3px; }
+    .bar-col.sel .bar-fill { background: linear-gradient(180deg, var(--yellow), var(--yellow-dk)); }
+    .bar-lbl { font-size: 10px; font-weight: 700; color: var(--plum-soft); }
+
+    .cat-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; }
+    .cat-row:not(:last-child) { border-bottom: 1px solid var(--line); }
+    .cat-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .cat-name { flex: 1; font-size: 13px; font-weight: 700; }
+    .cat-pct { font-size: 12px; color: var(--plum-soft); font-weight: 700; }
+    .cat-amt { font-size: 13px; font-weight: 800; min-width: 68px; text-align: right; }
+
+    /* ── BUDGET & GOALS ── */
+    .bgt-item, .goal-item {
+      background: var(--card); border-radius: 18px; padding: 15px; margin-bottom: 10px;
+      box-shadow: var(--shadow-sm); border: 2px solid var(--line); cursor: pointer;
+    }
+    .bgt-hdr, .goal-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .bgt-cat, .goal-name { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px; }
+    .bgt-cat svg, .goal-name svg { width: 16px; height: 16px; color: var(--coral); }
+    .bgt-amts { font-size: 12px; color: var(--plum-soft); font-weight: 700; margin-bottom: 6px; }
+    .bar-bg { height: 10px; background: var(--line); border-radius: 6px; overflow: hidden; }
+    .bar-prog { height: 100%; border-radius: 6px; transition: width .4s ease; }
+    .bgt-pct { font-size: 11px; font-weight: 800; margin-top: 5px; text-align: right; }
+
+    .goal-progress-wrap { display: flex; align-items: center; gap: 12px; }
+    .goal-ring { flex-shrink: 0; }
+    .goal-info { flex: 1; }
+    .goal-target { font-size: 12px; color: var(--plum-soft); font-weight: 700; }
+    .goal-pct-label { font-size: 20px; font-weight: 800; font-family: 'Baloo 2', sans-serif; }
+
+    .fab-add {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dk));
+      border: none; border-radius: 15px; padding: 13px;
+      color: #fff; font-family: 'Baloo 2', sans-serif; font-size: 14px; font-weight: 700;
+      cursor: pointer; box-shadow: var(--shadow-teal); width: 100%; margin-bottom: 14px;
+    }
+    .fab-add svg { width: 16px; height: 16px; }
+
+    /* ── MODALS ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(45,42,74,.55);
+      backdrop-filter: blur(6px);
+      z-index: 200; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: var(--card); border-radius: 24px; padding: 22px;
+      width: 100%; max-width: 360px;
+      box-shadow: 0 24px 60px rgba(45,42,74,.35);
+      max-height: 88vh; overflow-y: auto;
+    }
+    .modal-hdr { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .modal-hdr svg { width: 18px; height: 18px; color: var(--coral); }
+    .modal-hdr h3 { font-family: 'Baloo 2', sans-serif; font-size: 18px; font-weight: 700; }
+    .modal .iw { margin-bottom: 10px; }
+    .mbts { display: flex; gap: 9px; margin-top: 16px; }
+    .btn-c {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+      background: var(--cream); border: 2px solid var(--line); border-radius: 13px;
+      padding: 12px; color: var(--plum-soft); cursor: pointer; font-size: 14px; font-weight: 700;
+    }
+    .btn-c svg { width: 14px; height: 14px; }
+    .btn-ok {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+      background: linear-gradient(135deg, var(--coral), #FF8A6E); border: none; border-radius: 13px;
+      padding: 12px; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer;
+    }
+    .btn-ok svg { width: 14px; height: 14px; }
+
+    /* toast */
+    #toast {
+      position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--plum); color: #fff; padding: 12px 18px; border-radius: 14px;
+      font-size: 13px; font-weight: 700; box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      opacity: 0; pointer-events: none; transition: .25s; z-index: 999;
+      display: flex; align-items: center; gap: 8px; max-width: calc(100% - 40px);
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #toast.err { background: var(--coral-dk); }
+    #toast svg { width: 16px; height: 16px; flex-shrink: 0; }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="brand">
+        <div class="brand-mark"><i data-lucide="wallet"></i></div>
+        <span class="brand-name">FundFlow</span>
+      </div>
+      <div class="header-right">
+        <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme"><i data-lucide="moon" id="t-icon"></i></button>
+        <button class="icon-btn" onclick="exportCSV()" title="Export CSV"><i data-lucide="download"></i></button>
+        <button class="icon-btn" onclick="showClearModal()" title="Clear records"><i data-lucide="trash-2"></i></button>
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <div class="view active" id="view-home">
+      <div class="balance-card">
+        <div class="blabel">Total Balance</div>
+        <div class="bamt"><span class="cur">&#8377;</span><span id="bal">0</span></div>
+        <div class="bsub" id="txn-count">No transactions yet</div>
+        <div class="brow">
+          <div class="bstat inc">
+            <div class="bstat-top"><div class="bstat-icon" style="background:rgba(0,200,150,.35)"><i data-lucide="trending-up" style="color:#4FE3C1"></i></div><span class="bstat-label">Income</span></div>
+            <div class="bstat-val" id="tot-inc" style="color:#4FE3C1">0</div>
+          </div>
+          <div class="bstat exp">
+            <div class="bstat-top"><div class="bstat-icon" style="background:rgba(255,107,91,.35)"><i data-lucide="trending-down" style="color:#FF9A8A"></i></div><span class="bstat-label">Expenses</span></div>
+            <div class="bstat-val" id="tot-exp" style="color:#FF9A8A">0</div>
+          </div>
+          <div class="bstat recur">
+            <div class="bstat-top"><div class="bstat-icon" style="background:rgba(255,201,77,.4)"><i data-lucide="repeat" style="color:var(--yellow)"></i></div><span class="bstat-label">Recurring</span></div>
+            <div class="bstat-val" id="tot-recur" style="color:var(--yellow)">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="add-form">
+        <div class="type-toggle">
+          <button class="type-btn ae" id="btn-exp" onclick="setType('expense')"><i data-lucide="arrow-up-circle"></i> Expense</button>
+          <button class="type-btn" id="btn-inc" onclick="setType('income')"><i data-lucide="arrow-down-circle"></i> Income</button>
+        </div>
+        <div class="form-row">
+          <div class="iw" style="flex:2">
+            <label><i data-lucide="file-text"></i> Description</label>
+            <div class="inp-wrap"><span class="inp-icon"><i data-lucide="pencil"></i></span><input class="inp" id="inp-name" placeholder="e.g. Canteen lunch"></div>
+          </div>
+          <div class="iw" style="flex:1">
+            <label><i data-lucide="indian-rupee"></i> Amount</label>
+            <div class="inp-wrap"><span class="inp-icon"><i data-lucide="coins"></i></span><input class="inp" id="inp-amt" type="number" placeholder="0" min="0"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="iw">
+            <label><i data-lucide="tag"></i> Category</label>
+            <div class="inp-wrap"><span class="inp-icon"><i data-lucide="layers"></i></span>
+              <select class="inp" id="inp-cat" onchange="checkOther()">
+                <option value="Food">&#127828; Food</option>
+                <option value="Transport">&#128663; Transport</option>
+                <option value="Shopping">&#128717; Shopping</option>
+                <option value="Health">&#128138; Health</option>
+                <option value="Entertainment">&#127918; Entertainment</option>
+                <option value="Housing">&#127968; Housing</option>
+                <option value="Bills">&#128241; Bills</option>
+                <option value="Salary">&#128188; Salary/Allowance</option>
+                <option value="Gift">&#127873; Gift</option>
+                <option value="Education">&#128218; Education</option>
+                <option value="Travel">&#9992; Travel</option>
+                <option value="Repair">&#128295; Repair</option>
+                <option value="Other">&#128176; Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="iw">
+            <label><i data-lucide="calendar-days"></i> Date</label>
+            <div class="inp-wrap"><input class="inp" id="inp-date" type="date" style="padding-left:12px"></div>
+          </div>
+        </div>
+        <div class="form-row other-wrap" id="other-wrap">
+          <div class="iw">
+            <label><i data-lucide="edit-3"></i> What is "Other"?</label>
+            <div class="inp-wrap"><span class="inp-icon"><i data-lucide="hash"></i></span><input class="inp" id="inp-other" placeholder="e.g. Hostel fine, Club fee..."></div>
+          </div>
+        </div>
+
+        <div class="chk-row" id="recur-chk" onclick="toggleRecurChk()">
+          <div class="chk-box"><i data-lucide="check"></i></div>
+          <span>Make this a recurring transaction</span>
+        </div>
+        <div class="form-row recur-freq-wrap" id="recur-freq-wrap">
+          <div class="iw">
+            <label><i data-lucide="repeat"></i> Repeats</label>
+            <div class="inp-wrap"><select class="inp" id="inp-recur-freq" style="padding-left:12px">
+              <option value="monthly">Every month</option>
+              <option value="weekly">Every week</option>
+            </select></div>
+          </div>
+        </div>
+
+        <button class="add-btn" onclick="addTxn()"><i data-lucide="plus-circle"></i> Add Transaction</button>
+      </div>
+
+      <div class="stitle"><i data-lucide="repeat"></i> Recurring</div>
+      <div id="recur-list"><div class="empty"><div class="ei"><i data-lucide="repeat"></i></div><p>No recurring transactions.<br>Tick the box above to add one, like monthly rent or allowance.</p></div></div>
+
+      <div class="stitle"><i data-lucide="list"></i> Recent Transactions</div>
+      <div class="txn-search-wrap">
+        <div class="inp-wrap"><span class="inp-icon"><i data-lucide="search"></i></span><input class="inp" id="txn-search" placeholder="Search transactions..." oninput="filterTxns()"></div>
+      </div>
+      <div class="txn-list" id="txn-list"></div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="view" id="view-analytics">
+      <div class="stitle" style="margin-top:4px"><i data-lucide="bar-chart-2"></i> Analytics</div>
+      <div class="month-pills" id="mpills"></div>
+      <div class="mdetail" id="mdetail" style="display:none">
+        <div class="mdetail-hdr"><div class="mdetail-name" id="md-name">&#8212;</div><button class="mclose-btn" onclick="closeMd()"><i data-lucide="x"></i></button></div>
+        <div class="mds-row">
+          <div class="mds"><div class="mds-label">Expense</div><div class="mds-val" id="md-exp" style="color:var(--coral-dk)">&#8377;0</div></div>
+          <div class="mds"><div class="mds-label">Income</div><div class="mds-val" id="md-inc" style="color:var(--teal-dk)">&#8377;0</div></div>
+          <div class="mds"><div class="mds-label">Net</div><div class="mds-val" id="md-net">&#8377;0</div></div>
+        </div>
+        <div class="txn-list" id="md-list"></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title"><i data-lucide="bar-chart"></i> Last 12 Months <small style="color:var(--plum-soft);font-weight:600;margin-left:4px">&middot; tap a bar</small></div>
+        <div class="bar-chart-scroll"><div class="bar-chart" id="bar-chart"></div></div>
+      </div>
+      <div class="chart-wrap" id="cat-chart">
+        <div class="empty"><div class="ei"><i data-lucide="pie-chart"></i></div><p>Add transactions to see analytics</p></div>
+      </div>
+    </div>
+
+    <!-- BUDGET -->
+    <div class="view" id="view-budget">
+      <div class="stitle" style="margin-top:4px"><i data-lucide="target"></i> Budget Tracker</div>
+      <button class="fab-add" style="background:linear-gradient(135deg,var(--coral),#FF8A6E);box-shadow:var(--shadow-coral)" onclick="showBM()"><i data-lucide="plus-circle"></i> Set a Budget</button>
+      <div id="bgt-list"><div class="empty"><div class="ei"><i data-lucide="target"></i></div><p>No budgets set.<br>Tap "Set a Budget" to add one!</p></div></div>
+    </div>
+
+    <!-- GOALS -->
+    <div class="view" id="view-goals">
+      <div class="stitle" style="margin-top:4px"><i data-lucide="piggy-bank"></i> Savings Goals</div>
+      <button class="fab-add" onclick="showGoalModal()"><i data-lucide="plus-circle"></i> New Savings Goal</button>
+      <div id="goal-list"><div class="empty"><div class="ei"><i data-lucide="piggy-bank"></i></div><p>No goals yet.<br>Try saving for a trip, laptop, or gadget!</p></div></div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-btn active" id="nav-home" onclick="sv('home')"><i data-lucide="home"></i>Home</button>
+    <button class="nav-btn" id="nav-analytics" onclick="sv('analytics')"><i data-lucide="bar-chart-2"></i>Stats</button>
+    <button class="nav-btn" id="nav-budget" onclick="sv('budget')"><i data-lucide="target"></i>Budget</button>
+    <button class="nav-btn" id="nav-goals" onclick="sv('goals')"><i data-lucide="piggy-bank"></i>Goals</button>
+  </div>
+
+  <div id="toast"></div>
+
+  <!-- EDIT TRANSACTION MODAL -->
+  <div class="modal-overlay" id="edit-modal">
+    <div class="modal">
+      <div class="modal-hdr"><i data-lucide="pencil"></i><h3>Edit Transaction</h3></div>
+      <input type="hidden" id="edit-id">
+      <div class="form-row">
+        <div class="iw" style="flex:2">
+          <label><i data-lucide="file-text"></i> Description</label>
+          <div class="inp-wrap"><span class="inp-icon"><i data-lucide="pencil"></i></span><input class="inp" id="edit-name" placeholder="e.g. Canteen lunch"></div>
+        </div>
+        <div class="iw" style="flex:1">
+          <label><i data-lucide="indian-rupee"></i> Amount</label>
+          <div class="inp-wrap"><span class="inp-icon"><i data-lucide="coins"></i></span><input class="inp" id="edit-amt" type="number" placeholder="0" min="0"></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="iw">
+          <label><i data-lucide="tag"></i> Category</label>
+          <div class="inp-wrap"><span class="inp-icon"><i data-lucide="layers"></i></span>
+            <select class="inp" id="edit-cat" onchange="checkEditOther()">
+              <option value="Food">&#127828; Food</option>
+              <option value="Transport">&#128663; Transport</option>
+              <option value="Shopping">&#128717; Shopping</option>
+              <option value="Health">&#128138; Health</option>
+              <option value="Entertainment">&#127918; Entertainment</option>
+              <option value="Housing">&#127968; Housing</option>
+              <option value="Bills">&#128241; Bills</option>
+              <option value="Salary">&#128188; Salary/Allowance</option>
+              <option value="Gift">&#127873; Gift</option>
+              <option value="Education">&#128218; Education</option>
+              <option value="Travel">&#9992; Travel</option>
+              <option value="Repair">&#128295; Repair</option>
+              <option value="Other">&#128176; Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="iw">
+          <label><i data-lucide="calendar-days"></i> Date</label>
+          <div class="inp-wrap"><input class="inp" id="edit-date" type="date" style="padding-left:12px"></div>
+        </div>
+      </div>
+      <div class="form-row other-wrap" id="edit-other-wrap">
+        <div class="iw">
+          <label><i data-lucide="edit-3"></i> What is "Other"?</label>
+          <div class="inp-wrap"><span class="inp-icon"><i data-lucide="hash"></i></span><input class="inp" id="edit-other" placeholder="e.g. Hostel fine, Club fee..."></div>
+        </div>
+      </div>
+      <div class="iw" style="margin-bottom:10px;">
+        <label><i data-lucide="arrow-right-left"></i> Type</label>
+        <div class="inp-wrap"><select class="inp" id="edit-type" style="padding-left:12px">
+          <option value="expense">Expense</option>
+          <option value="income">Income</option>
+        </select></div>
+      </div>
+      <div class="mbts">
+        <button class="btn-c" onclick="closeEditModal()"><i data-lucide="x"></i> Cancel</button>
+        <button class="btn-ok" onclick="saveEditTxn()"><i data-lucide="check"></i> Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUDGET MODAL -->
+  <div class="modal-overlay" id="bm">
+    <div class="modal">
+      <div class="modal-hdr"><i data-lucide="target"></i><h3>Set Budget</h3></div>
+      <div class="iw"><label><i data-lucide="layers"></i> Category</label>
+        <div class="inp-wrap"><span class="inp-icon"><i data-lucide="tag"></i></span><select class="inp" id="bm-cat">
+          <option>&#127828; Food</option>
+          <option>&#128663; Transport</option>
+          <option>&#128717; Shopping</option>
+          <option>&#128138; Health</option>
+          <option>&#127918; Entertainment</option>
+          <option>&#127968; Housing</option>
+          <option>&#128241; Bills</option>
+          <option>&#9992; Travel</option>
+          <option>&#128218; Education</option>
+          <option>&#127873; Gift</option>
+          <option>&#128295; Repair</option>
+          <option>&#128176; Other</option>
+        </select></div>
+      </div>
+      <div class="iw"><label><i data-lucide="calendar"></i> Budget Period</label>
+        <div class="inp-wrap"><select class="inp" id="bm-period" onchange="onBmPeriodChange()" style="padding-left:12px">
+          <option value="monthly">This month</option>
+          <option value="custom">Custom date range</option>
+        </select></div>
+      </div>
+      <div id="bm-custom-dates" style="display:none;gap:10px;" class="form-row">
+        <div class="iw"><label>From</label><div class="inp-wrap"><input class="inp" id="bm-from" type="date" style="padding-left:12px"></div></div>
+        <div class="iw"><label>To</label><div class="inp-wrap"><input class="inp" id="bm-to" type="date" style="padding-left:12px"></div></div>
+      </div>
+      <div class="iw"><label><i data-lucide="indian-rupee"></i> Budget Limit</label>
+        <div class="inp-wrap"><span class="inp-icon"><i data-lucide="coins"></i></span><input class="inp" id="bm-amt" type="number" placeholder="e.g. 5000"></div>
+      </div>
+      <div class="mbts"><button class="btn-c" onclick="closeBM()"><i data-lucide="x"></i> Cancel</button><button class="btn-ok" onclick="saveBudget()"><i data-lucide="check"></i> Save</button></div>
+    </div>
+  </div>
+
+  <!-- GOAL MODAL -->
+  <div class="modal-overlay" id="goal-modal">
+    <div class="modal">
+      <div class="modal-hdr"><i data-lucide="piggy-bank"></i><h3 id="goal-modal-title">New Savings Goal</h3></div>
+      <input type="hidden" id="goal-id">
+      <div class="iw"><label><i data-lucide="flag"></i> Goal Name</label>
+        <div class="inp-wrap"><span class="inp-icon"><i data-lucide="pencil"></i></span><input class="inp" id="goal-name" placeholder="e.g. New Laptop"></div>
+      </div>
+      <div class="form-row">
+        <div class="iw"><label><i data-lucide="indian-rupee"></i> Target Amount</label>
+          <div class="inp-wrap"><span class="inp-icon"><i data-lucide="coins"></i></span><input class="inp" id="goal-target" type="number" placeholder="e.g. 40000"></div>
+        </div>
+        <div class="iw"><label><i data-lucide="wallet"></i> Saved So Far</label>
+          <div class="inp-wrap"><span class="inp-icon"><i data-lucide="coins"></i></span><input class="inp" id="goal-saved" type="number" placeholder="0"></div>
+        </div>
+      </div>
+      <div class="mbts"><button class="btn-c" onclick="closeGoalModal()"><i data-lucide="x"></i> Cancel</button><button class="btn-ok" onclick="saveGoal()"><i data-lucide="check"></i> Save</button></div>
+    </div>
+  </div>
+
+  <!-- ADD FUNDS TO GOAL MODAL -->
+  <div class="modal-overlay" id="goal-add-modal">
+    <div class="modal">
+      <div class="modal-hdr"><i data-lucide="plus-circle"></i><h3>Add to Goal</h3></div>
+      <input type="hidden" id="goal-add-id">
+      <div class="iw"><label><i data-lucide="indian-rupee"></i> Amount to Add</label>
+        <div class="inp-wrap"><span class="inp-icon"><i data-lucide="coins"></i></span><input class="inp" id="goal-add-amt" type="number" placeholder="e.g. 1000"></div>
+      </div>
+      <div class="mbts"><button class="btn-c" onclick="closeGoalAddModal()"><i data-lucide="x"></i> Cancel</button><button class="btn-ok" onclick="confirmGoalAdd()"><i data-lucide="check"></i> Add</button></div>
+    </div>
+  </div>
+
+  <!-- DELETE GOAL/BUDGET CONFIRM MODAL -->
+  <div class="modal-overlay" id="del-cm">
+    <div class="modal">
+      <div class="modal-hdr"><i data-lucide="alert-triangle" style="color:var(--coral)"></i><h3>Confirm Delete</h3></div>
+      <div class="iw"><p id="del-cat-name" style="font-size:14px;color:var(--plum-soft);margin-bottom:12px;font-weight:600;">Are you sure?</p></div>
+      <div class="mbts">
+        <button class="btn-c" onclick="closeDelCm()"><i data-lucide="x"></i> Cancel</button>
+        <button class="btn-ok" onclick="confirmDelete()" style="background:linear-gradient(135deg,var(--coral-dk),var(--coral))"><i data-lucide="trash-2"></i> Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLEAR RECORDS MODAL -->
+  <div class="modal-overlay" id="clear-modal">
+    <div class="modal">
+      <div class="modal-hdr"><i data-lucide="trash-2" style="color:var(--coral)"></i><h3>Clear Records</h3></div>
+      <div class="iw" style="margin-bottom:14px;">
+        <label><i data-lucide="calendar"></i> Which records to clear?</label>
+        <div class="inp-wrap"><select class="inp" id="clear-range" onchange="onClearRangeChange()" style="padding-left:12px">
+          <option value="thismonth">This Month only</option>
+          <option value="last3">Last 3 Months</option>
+          <option value="last6">Last 6 Months</option>
+          <option value="thisyear">This Year</option>
+          <option value="custom">Custom Date Range</option>
+          <option value="all" style="color:var(--coral)">ALL Records (everything)</option>
+        </select></div>
+      </div>
+      <div id="clear-custom-dates" style="display:none;gap:10px;margin-bottom:14px;" class="form-row">
+        <div class="iw"><label>From</label><div class="inp-wrap"><input class="inp" id="clear-from" type="date" style="padding-left:12px" oninput="updateClearPreview()"></div></div>
+        <div class="iw"><label>To</label><div class="inp-wrap"><input class="inp" id="clear-to" type="date" style="padding-left:12px" oninput="updateClearPreview()"></div></div>
+      </div>
+      <div id="clear-preview" style="background:rgba(255,107,91,.08);border:2px solid rgba(255,107,91,.25);border-radius:12px;padding:12px;margin-bottom:14px;font-size:13px;color:var(--plum-soft);font-weight:600;display:none;">
+        <span id="clear-preview-text"></span>
+      </div>
+      <div style="background:rgba(255,107,91,.06);border:2px solid rgba(255,107,91,.2);border-radius:12px;padding:12px;margin-bottom:14px;">
+        <div style="font-size:12px;color:var(--coral-dk);font-weight:800;margin-bottom:4px;">Heads up</div>
+        <div style="font-size:12px;color:var(--plum-soft);line-height:1.6;font-weight:600;">Deleted transactions <strong>cannot be recovered</strong>. Budgets and goals will not be affected.</div>
+      </div>
+      <div class="mbts">
+        <button class="btn-c" onclick="closeModal('clear-modal')"><i data-lucide="x"></i> Cancel</button>
+        <button onclick="confirmClear()" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--coral);border:none;border-radius:13px;padding:12px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">
+          <i data-lucide="trash-2"></i> Clear Records
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
